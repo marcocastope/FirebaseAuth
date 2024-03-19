@@ -59,6 +59,24 @@ struct ContentView: View {
                 Text("No estás logeado")
             } else {
                 Text("Estás logeado")
+                HStack {
+                    Image("appledev")
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: 70, height: 70)
+                        .clipShape(Circle())
+                    Spacer()
+                    VStack(alignment: .leading) {
+                        TextField("Username", text: self.$authVM.username)
+                            .autocapitalization(/*@START_MENU_TOKEN@*/.none/*@END_MENU_TOKEN@*/)
+                        Button(action: {
+                            self.authVM.updateProfileUser()
+                        }, label: {
+                            Text("Actualizar")
+                        })
+                    }
+                }
+                .padding(.horizontal, 20)
             }
         }
         .onAppear(perform: {

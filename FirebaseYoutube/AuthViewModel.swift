@@ -17,6 +17,8 @@ final class AuthViewModel : ObservableObject {
     @Published var showMessage = false
     @Published var user: User?
     
+    @Published var username = ""
+    
     init() {
         auth = Auth.auth()
     }
@@ -56,6 +58,23 @@ final class AuthViewModel : ObservableObject {
         auth.addStateDidChangeListener { [weak self] _, user in
             guard let self = self else {return}
             self.user = user
+            self.username = user?.displayName ?? ""
+        }
+    }
+    
+    func updateProfileUser() {
+        guard let user = self.user else {return}
+        
+        let changeRequest = user.createProfileChangeRequest()
+        changeRequest.displayName = self.username
+        changeRequest.commitChanges { error in
+            if let error = error {
+                self.message = error.localizedDescription
+                self.showMessage.toggle()
+            } else {
+                self.message = "Usuario actualizado con éxito"
+                self.showMessage.toggle()
+            }
         }
     }
 }
